@@ -11,9 +11,9 @@ RUN useradd -m -s /bin/bash qwen
 
 WORKDIR /app
 
-# Python dependencies für 14B Modell
-COPY requirements.14b.txt .
-RUN pip install --no-cache-dir -r requirements.14b.txt
+# Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Application code
 COPY --chown=qwen:qwen . .

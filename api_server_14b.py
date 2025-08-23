@@ -56,7 +56,7 @@ class QwenAPI14B:
                 # Optimizations für 14B Modell
                 max_memory={0: "20GB", "cpu": "30GB"},  # Adjust based on your GPU
                 load_in_8bit=False,  # Set to True if memory issues
-                attn_implementation="flash_attention_2" if torch.cuda.is_available() else "eager"
+                attn_implementation="eager"  # Flash attention deaktiviert da nicht installiert
             )
             
             logger.info(f"Qwen 2.5 Coder 14B loaded successfully")

@@ -60,6 +60,35 @@ class APIKeyManager:
     
     async def verify_api_key(self, api_key: str) -> Dict:
         """Verify and get API key data"""
+        # First check environment variables for direct API key match
+        admin_keys = os.getenv("ADMIN_KEYS", "").split(",")
+        api_keys = os.getenv("API_KEYS", "").split(",") 
+        readonly_keys = os.getenv("READ_ONLY_KEYS", "").split(",")
+        
+        # Check against environment variables first
+        if api_key in admin_keys:
+            return {
+                "user_id": "admin",
+                "permissions": ["admin", "generate", "read"],
+                "requests_today": 0,
+                "daily_limit": 10000
+            }
+        elif api_key in api_keys:
+            return {
+                "user_id": "api_user", 
+                "permissions": ["generate", "read"],
+                "requests_today": 0,
+                "daily_limit": 1000
+            }
+        elif api_key in readonly_keys:
+            return {
+                "user_id": "readonly_user",
+                "permissions": ["read"],
+                "requests_today": 0,
+                "daily_limit": 5000
+            }
+        
+        # Fallback to Redis-based verification
         hashed_key = hashlib.sha256(api_key.encode()).hexdigest()
         redis_client = await self.get_redis()
         key_data = await redis_client.hgetall(f"apikey:{hashed_key}")  # type: ignore

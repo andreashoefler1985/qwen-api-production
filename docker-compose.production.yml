@@ -49,9 +49,9 @@ services:
     env_file:
       - .env.production
     user: "1000:1000"
-    read_only: true
     tmpfs:
       - /tmp:noexec,nosuid,size=500m
+      - /home/user/.cache:noexec,nosuid,size=2g
     cap_drop:
       - ALL
     cap_add:
@@ -64,7 +64,7 @@ services:
     expose:
       - "8000"
     volumes:
-      - ./models:/app/models:ro
+      - ./models:/app/models
       - ./cache:/app/cache
       - ./logs:/app/logs
     environment:
@@ -139,7 +139,7 @@ services:
     cap_drop:
       - ALL
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "--raw", "incr", "ping"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -149,48 +149,52 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  fail2ban:
-    image: crazymax/fail2ban:latest
-    container_name: fail2ban-security
-    restart: unless-stopped
-    network_mode: "host"
-    privileged: true
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-    volumes:
-      - ./fail2ban:/etc/fail2ban:ro
-      - nginx_logs:/var/log/nginx:ro
-      - /var/log:/var/log:ro
-      - fail2ban_data:/data
-    environment:
-      - TZ=Europe/Berlin
-      - F2B_LOG_LEVEL=INFO
-      - F2B_DB_PURGE_AGE=1d
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+  # fail2ban temporär deaktiviert wegen Volume-Mount-Problemen
+  # fail2ban:
+  #   image: crazymax/fail2ban:latest
+  #   container_name: fail2ban-security
+  #   restart: unless-stopped
+  #   privileged: true
+  #   cap_add:
+  #     - NET_ADMIN
+  #     - NET_RAW
+  #   volumes:
+  #     - ./fail2ban:/etc/fail2ban:ro
+  #     - nginx_logs:/var/log/nginx:ro
+  #     - /var/log:/var/log:ro
+  #     - fail2ban_data:/data
+  #   environment:
+  #     - TZ=Europe/Berlin
+  #     - F2B_LOG_LEVEL=INFO
+  #     - F2B_DB_PURGE_AGE=1d
+  #   networks:
+  #     - web
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
 
-  log-monitor:
-    image: grafana/promtail:2.9.0
-    container_name: log-monitor
-    restart: unless-stopped
-    volumes:
-      - ./promtail-config.yml:/etc/promtail/config.yml:ro
-      - nginx_logs:/var/log/nginx:ro
-      - ./logs:/app/logs:ro
-      - /var/log:/var/log:ro
-    networks:
-      - monitoring
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
-    read_only: true
-    tmpfs:
-      - /tmp:noexec,nosuid,size=50m
+  # log-monitor temporär deaktiviert wegen Download-Problemen
+  # Wird durch lokales Logging ersetzt
+  # log-monitor:
+  #   image: grafana/promtail:2.9.0
+  #   container_name: log-monitor
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./promtail-config.yml:/etc/promtail/config.yml:ro
+  #     - nginx_logs:/var/log/nginx:ro
+  #     - ./logs:/app/logs:ro
+  #     - /var/log:/var/log:ro
+  #   networks:
+  #     - monitoring
+  #   security_opt:
+  #     - no-new-privileges:true
+  #   cap_drop:
+  #     - ALL
+  #   read_only: true
+  #   tmpfs:
+  #     - /tmp:noexec,nosuid,size=50m
 
   backup:
     image: alpine:3.18
@@ -231,16 +235,17 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.20.0.0/16
+        - subnet: 192.168.10.0/24
   backend:
     driver: bridge
     internal: true
     ipam:
       config:
-        - subnet: 172.21.0.0/16
-  monitoring:
-    driver: bridge
-    internal: true
-    ipam:
-      config:
-        - subnet: 172.22.0.0/16
+        - subnet: 192.168.11.0/24
+  # monitoring-Netzwerk entfernt da log-monitor deaktiviert
+  # monitoring:
+  #   driver: bridge
+  #   internal: true
+  #   ipam:
+  #     config:
+  #       - subnet: 172.22.0.0/16
