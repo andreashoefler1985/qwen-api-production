@@ -1,0 +1,12 @@
+# VSCode settings.json for Cline
+{
+    "cline.apiProvider": "openai-compatible",
+    "cline.openaiCompatibleApiUrl": "https://your-domain.com/v1/chat/completions",
+    "cline.openaiCompatibleApiKey": "your-api-key-here",
+    "cline.model": "qwen2.5-coder-32b",
+    "cline.maxTokens": 8192,
+    "cline.temperature": 0.1,
+    "cline.requestTimeout": 300000,
+    "cline.customInstructions": "You are a helpful coding assistant using Qwen 2.5 Coder. Provide clear, well-commented code and explain your reasoning.",
+    "cline.enableCaching": true
+}

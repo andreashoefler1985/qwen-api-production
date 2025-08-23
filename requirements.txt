@@ -1,0 +1,20 @@
+# ~/qwen-api/requirements.14b.txt - Production Ready
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+torch>=2.0.0
+transformers>=4.35.0
+accelerate>=0.24.0
+cachetools>=5.3.0
+pydantic>=2.4.0
+PyJWT>=2.8.0
+tenacity>=8.2.0
+redis>=5.0.0
+requests>=2.31.0
+python-multipart>=0.0.6
+
+# Für bessere Performance mit 14B (temporär deaktiviert für stabiles Deployment)
+# flash-attn>=2.0.0
+
+# Production Monitoring & Logging
+prometheus-client>=0.17.1
+structlog>=23.1.0

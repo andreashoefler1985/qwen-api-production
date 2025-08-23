@@ -1,0 +1,79 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://localhost:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: nginx-access
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: nginx-access
+          service: ai.hoefler-cloud.com
+          __path__: /var/log/nginx/access.log
+
+  - job_name: nginx-error
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: nginx-error
+          service: ai.hoefler-cloud.com
+          __path__: /var/log/nginx/error.log
+
+  - job_name: qwen-api
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: qwen-api
+          service: ai.hoefler-cloud.com
+          __path__: /app/logs/*.log
+
+  - job_name: system-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: system
+          service: ai.hoefler-cloud.com
+          __path__: /var/log/auth.log
+
+# Pipeline stages für bessere Log-Verarbeitung
+pipeline_stages:
+  - match:
+      selector: '{job="nginx-access"}'
+      stages:
+        - regex:
+            expression: '(?P<remote_addr>\S+) - (?P<remote_user>\S+) \[(?P<time_local>[^\]]+)\] "(?P<request>[^"]*)" (?P<status>\d+) (?P<body_bytes_sent>\d+) "(?P<http_referer>[^"]*)" "(?P<http_user_agent>[^"]*)"'
+        - labels:
+            remote_addr:
+            status:
+            request:
+
+  - match:
+      selector: '{job="nginx-error"}'
+      stages:
+        - regex:
+            expression: '(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}) \[(?P<level>\w+)\] (?P<message>.*)'
+        - labels:
+            level:
+
+  - match:
+      selector: '{job="qwen-api"}'
+      stages:
+        - json:
+            expressions:
+              timestamp: timestamp
+              level: level
+              message: message
+              module: logger
+        - labels:
+            level:
+            module:

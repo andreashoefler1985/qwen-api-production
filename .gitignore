@@ -1,0 +1,89 @@
+# Produktions-Sicherheit - NIEMALS committen!
+.env.production
+.env.production.backup_*
+api_keys_*.txt
+*.key
+*.pem
+*.crt
+ssl/
+
+# Logs und temporäre Dateien
+logs/
+*.log
+backup_*.log
+
+# Backups
+backups/
+*.backup
+
+# Docker-Volumes
+redis_data/
+nginx_logs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Cache
+cache/
+.cache/
+
+# Models (zu groß für Git)
+models/
+*.bin
+*.safetensors
+
+# Test-Dateien
+test_results/
+coverage.xml
+.pytest_cache/
+
+# Node.js (falls verwendet)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Generated files
+generate_api_key.py
+api_admin_key.txt
