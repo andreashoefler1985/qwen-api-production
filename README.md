@@ -65,14 +65,14 @@ chmod +x deploy-production-final.sh
 
 ### 4. SSL-Zertifikate einrichten
 ```bash
-./ssl_setup.sh ai.hoefler-cloud.com
+./ssl_setup.sh deine Domain 
 ```
 
 ## 🔑 API Usage
 
 ### Chat Completion Beispiel
 ```bash
-curl -X POST https://ai.hoefler-cloud.com/api/v1/chat \
+curl -X POST https://deine Domain/api/v1/chat \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -86,12 +86,12 @@ curl -X POST https://ai.hoefler-cloud.com/api/v1/chat \
 
 ### Health Check
 ```bash
-curl https://ai.hoefler-cloud.com/api/health
+curl https://deine Domain/api/health
 ```
 
 ### Metrics
 ```bash
-curl https://ai.hoefler-cloud.com/api/metrics
+curl https://deine Domain/api/metrics
 ```
 
 ## 📁 Projektstruktur
