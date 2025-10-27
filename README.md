@@ -4,7 +4,7 @@
 [![SSL](https://img.shields.io/badge/SSL-Let's%20Encrypt-green.svg)](https://letsencrypt.org/)
 [![Security](https://img.shields.io/badge/Security-Hardened-red.svg)](https://github.com/andreashoefler1985/qwen-api-production)
 
-**Production-ready Qwen AI API Server** mit Docker, SSL, Authentication und Monitoring für **ai.hoefler-cloud.com**.
+**Production-ready Qwen AI API Server** mit Docker, SSL, Authentication und Monitoring 
 
 ## 🎯 Features
 
@@ -48,7 +48,7 @@ cd qwen-api-production
 ### 2. DNS-Konfiguration
 ```bash
 # Domain auf Server-IP zeigen lassen
-dig ai.hoefler-cloud.com  # sollte auf Ihre Server-IP zeigen
+dig deine Domain  # sollte auf Ihre Server-IP zeigen
 ```
 
 ### 3. Production-Deployment
